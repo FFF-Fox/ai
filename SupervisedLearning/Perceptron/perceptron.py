@@ -64,7 +64,7 @@ class Perceptron:
         """Plot the decision boundary
         Originally found on stack overflow ( https://stackoverflow.com/questions/19054923/plot-decision-boundary-matplotlib ). Made some changes.
         """
-
+        import matplotlib.pyplot as plt
         if X.shape[1] > 3:
             print ( "Cannot plot more than 2 dimensions. Please use only for binary classification on 2 dimensional data." )
             return
@@ -88,14 +88,16 @@ class Perceptron:
         plt.scatter(X[:,0], X[:,1], marker='.', c=y,  cmap="coolwarm")
 
         plt.title(title, fontsize=16)
-        plt.xlabel("x1", fontsize=14)
-        plt.ylabel("x2", fontsize=14)
+        plt.xlabel("$x_{1}$", fontsize=14)
+        plt.ylabel("$x_{2}$", fontsize=14)
         plt.show()
 
 
 if __name__ == '__main__':
     from sklearn.datasets import make_moons
     np.random.seed(10)
+
+    # --- Tests ---
     m = 3 # number of training examples
     n = 2
     X, y = make_moons(m, noise=0.1)
@@ -113,12 +115,12 @@ if __name__ == '__main__':
     assert((y_hat == [0, 0, 1]).all())
 
 
-
+    # --- Example of use ---
     m = 300 # number of training examples
     n = 2
     X, y = make_moons(m, noise=0.1)
-    p.init_params(2)
+    n = X.shape[1]
+    p.init_params(n)
     p.train(X,y,200,rate=0.1, init=False)
 
-    import matplotlib.pyplot as plt
     p.plot_decision_boundary(X,y,"After 100 epochs of training")
