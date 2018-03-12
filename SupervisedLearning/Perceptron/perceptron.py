@@ -36,8 +36,60 @@ class Perceptron:
 
     def mse(self, y_hat, y):
         """ Computes the mean square error. """
-        mse = ((y_hat - y) ** 2).mean()
+        mse = np.square(y_hat - y).mean()
         return mse
+
+    def train(self, X, y, epochs, threshold=0):
+        """ Given the training dataset and the number of epochs, the perceptron is trained to minimize its error. """
+        (m,n) = X.shape
+        self.init_params(n)
+
+        for epoch in range(epochs):
+            y_hat = self.forward_prop(X)
+            self.back_prop(y_hat, y, X)
+            mse = self.mse(y_hat,y)
+
+            if epoch % 5 == 0:
+                print("MSE:",mse)
+
+            if mse < threshold:
+                break
+
+    def predict(self, X):
+        y_hat = self.forward_prop(X)
+        return y_hat
+
+    def plot_classification_results(self, X, y, title, h=0.01):
+        """Plot the decision boundary
+        Originally found on stack overflow ( https://stackoverflow.com/questions/19054923/plot-decision-boundary-matplotlib ). Made some changes.
+        """
+
+        if X.shape[1] > 3:
+            print ( "Cannot plot more than 2 dimensions. Please use only for binary classification on 2 dimensional data." )
+            return
+
+        x_min, x_max = X[:,0].min() - 1, X[:,0].max() + 1
+        y_min, y_max = X[:,1].min() - 1, X[:,1].max() + 1
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                             np.arange(y_min, y_max, h))
+
+        Zx = np.c_[xx.ravel(), yy.ravel()]
+
+        # here "model" is the model's prediction (classification) function
+        Z = self.predict( Zx )
+
+        # Put the result into a color plot
+        Z = Z.reshape(xx.shape)
+        plt.contourf(xx, yy, Z, cmap="coolwarm")
+        # plt.axis('off')
+
+        # Plot the training points
+        plt.scatter(X[:,0], X[:,1], marker='.', c=y,  cmap="coolwarm")
+
+        plt.title(title, fontsize=16)
+        plt.xlabel("x1", fontsize=14)
+        plt.ylabel("x2", fontsize=14)
+        plt.show()
 
 if __name__ == '__main__':
     from sklearn.datasets import make_moons
@@ -58,11 +110,18 @@ if __name__ == '__main__':
     y_hat = p.forward_prop(X)
     assert((y_hat == [0, 0, 1]).all())
 
-    for i in range(10):
-        y_hat = p.forward_prop(X)
-        p.back_prop(y_hat, y, X)
-        print(p.w,p.b)
-        print(p.mse(y_hat,y))
+    p.train(X,y,30)
+
+
+
+    m = 30 # number of training examples
+    X, y = make_moons(m, noise=0.1)
+    p.train(X,y,100)
+    # print(p.predict([1,1]))
+    # print(p.predict([1,0]))
+
+    import matplotlib.pyplot as plt
+    p.plot_classification_results(X,y,"After 100 epochs of training")
 
     # y_hat = p.forward_prop(X[0])
     # print(p.w,p.b)
