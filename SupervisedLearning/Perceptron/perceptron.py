@@ -34,6 +34,11 @@ class Perceptron:
         self.w = self.w + dw
         self.b = self.b + np.sum(d)
 
+    def mse(self, y_hat, y):
+        """ Computes the mean square error. """
+        mse = ((y_hat - y) ** 2).mean()
+        return mse
+
 if __name__ == '__main__':
     from sklearn.datasets import make_moons
     np.random.seed(10)
@@ -57,6 +62,7 @@ if __name__ == '__main__':
         y_hat = p.forward_prop(X)
         p.back_prop(y_hat, y, X)
         print(p.w,p.b)
+        print(p.mse(y_hat,y))
 
     # y_hat = p.forward_prop(X[0])
     # print(p.w,p.b)
