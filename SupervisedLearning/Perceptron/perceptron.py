@@ -27,26 +27,26 @@ class Perceptron:
         y_hat = self.step(z)
         return y_hat
 
-    def back_prop(self, y_hat, y, X):
+    def back_prop(self, y_hat, y, X, rate):
         """ Backward propagation step (batch). Update the weights of the perceptron based on the error of the model's output. """
         d = y - y_hat
         dw = np.dot(d.T,X)
-        self.w = self.w + dw
-        self.b = self.b + np.sum(d)
+        self.w = self.w + rate * dw
+        self.b = self.b + rate * np.sum(d)
 
     def mse(self, y_hat, y):
         """ Computes the mean square error. """
         mse = np.square(y_hat - y).mean()
         return mse
 
-    def train(self, X, y, epochs, threshold=0):
+    def train(self, X, y, epochs, threshold=0, rate=1):
         """ Given the training dataset and the number of epochs, the perceptron is trained to minimize its error. """
         (m,n) = X.shape
         self.init_params(n)
 
         for epoch in range(epochs):
             y_hat = self.forward_prop(X)
-            self.back_prop(y_hat, y, X)
+            self.back_prop(y_hat, y, X, rate)
             mse = self.mse(y_hat,y)
 
             if epoch % 5 == 0:
@@ -59,7 +59,7 @@ class Perceptron:
         y_hat = self.forward_prop(X)
         return y_hat
 
-    def plot_classification_results(self, X, y, title, h=0.01):
+    def plot_decision_boundary(self, X, y, title, h=0.01):
         """Plot the decision boundary
         Originally found on stack overflow ( https://stackoverflow.com/questions/19054923/plot-decision-boundary-matplotlib ). Made some changes.
         """
@@ -91,6 +91,7 @@ class Perceptron:
         plt.ylabel("x2", fontsize=14)
         plt.show()
 
+
 if __name__ == '__main__':
     from sklearn.datasets import make_moons
     np.random.seed(10)
@@ -116,12 +117,12 @@ if __name__ == '__main__':
 
     m = 30 # number of training examples
     X, y = make_moons(m, noise=0.1)
-    p.train(X,y,100)
+    p.train(X,y,100,rate=0.1)
     # print(p.predict([1,1]))
     # print(p.predict([1,0]))
 
     import matplotlib.pyplot as plt
-    p.plot_classification_results(X,y,"After 100 epochs of training")
+    p.plot_decision_boundary(X,y,"After 100 epochs of training")
 
     # y_hat = p.forward_prop(X[0])
     # print(p.w,p.b)
