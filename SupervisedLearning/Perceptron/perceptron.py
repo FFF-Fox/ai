@@ -36,13 +36,14 @@ class Perceptron:
 
     def mse(self, y_hat, y):
         """ Computes the mean square error. """
-        mse = np.square(y_hat - y).mean()
+        mse = np.mean(np.square(y_hat - y))
         return mse
 
-    def train(self, X, y, epochs, threshold=0, rate=1):
+    def train(self, X, y, epochs, threshold=0, rate=1, init=True):
         """ Given the training dataset and the number of epochs, the perceptron is trained to minimize its error. """
-        (m,n) = X.shape
-        self.init_params(n)
+        if init:
+            (m,n) = X.shape
+            self.init_params(n)
 
         for epoch in range(epochs):
             y_hat = self.forward_prop(X)
@@ -111,20 +112,13 @@ if __name__ == '__main__':
     y_hat = p.forward_prop(X)
     assert((y_hat == [0, 0, 1]).all())
 
-    p.train(X,y,30)
 
 
-
-    m = 30 # number of training examples
+    m = 300 # number of training examples
+    n = 2
     X, y = make_moons(m, noise=0.1)
-    p.train(X,y,100,rate=0.1)
-    # print(p.predict([1,1]))
-    # print(p.predict([1,0]))
+    p.init_params(2)
+    p.train(X,y,200,rate=0.1, init=False)
 
     import matplotlib.pyplot as plt
     p.plot_decision_boundary(X,y,"After 100 epochs of training")
-
-    # y_hat = p.forward_prop(X[0])
-    # print(p.w,p.b)
-    # p.back_prop(y_hat, y[0], X[0])
-    # print(p.w,p.b)
