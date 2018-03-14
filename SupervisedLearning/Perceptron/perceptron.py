@@ -4,7 +4,7 @@ class Perceptron:
     def __init__(self):
         self.w = None
         self.b = None
-        self.step = np.vectorize(self.step)
+        self.activation = np.vectorize(self.step)
 
     def init_params(self, n):
         """ Initialization of the model parameters. Initializes weights and bias at random using a normal distribution. """
@@ -24,7 +24,8 @@ class Perceptron:
     def forward_prop(self, X):
         """ Forward propagation step. Given an input X computes the perceptron's output. """
         z = self.linear_unit(X)
-        y_hat = self.step(z)
+        y_hat = self.activation(z)
+
         return y_hat
 
     def back_prop(self, y_hat, y, X, rate):
