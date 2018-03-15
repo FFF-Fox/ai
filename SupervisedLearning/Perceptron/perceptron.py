@@ -1,10 +1,15 @@
 import numpy as np
 
 class Perceptron:
-    def __init__(self):
+    def __init__(self, activation='step'):
         self.w = None
         self.b = None
-        self.activation = np.vectorize(self.step)
+
+        self.activations = {'step': self.step}
+        try:
+            self.activation = np.vectorize(self.activations[activation])
+        except:
+            raise ValueError('Activation values can be: ' + " ".join( self.activations.keys()) + '.')
 
     def init_params(self, n):
         """ Initialization of the model parameters. Initializes weights and bias at random using a normal distribution. """
@@ -103,7 +108,7 @@ if __name__ == '__main__':
     n = 2
     X, y = make_moons(m, noise=0.1)
 
-    p = Perceptron()
+    p = Perceptron('step')
 
     p.init_params(n)
     assert(p.w.shape == (n,))
@@ -122,6 +127,6 @@ if __name__ == '__main__':
     X, y = make_moons(m, noise=0.1)
     n = X.shape[1]
     p.init_params(n)
-    p.train(X,y,200,rate=0.1, init=False)
+    p.train(X,y,epochs=200,rate=0.1, init=False)
 
     p.plot_decision_boundary(X,y,"After 100 epochs of training")
