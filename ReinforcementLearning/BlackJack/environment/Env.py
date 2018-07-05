@@ -153,23 +153,15 @@ class Env:
 
         return reward
 
-        
-
-
-
-
 
 if __name__ == '__main__':
     print('Env main:')
 
     env = Env()
-    # testing dealer_add_card(...)
-    env.init_episode()
-    env.print_params()
-    
+    env.init_episode()    
     env.print_params()
     while not env.episode_finished:
-        action = input("Enter input: ")
+        action = input("hit / stick? -> ")
         reward = env.player_action(action)
         env.print_params()
         print ("Reward:", reward)
