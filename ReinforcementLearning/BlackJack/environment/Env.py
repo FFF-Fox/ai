@@ -8,6 +8,8 @@ class Env:
 
     def print_params(self):
         """ Print all the environment's parameters. """
+        print('~' * 30)
+        print("Episode finished:",self.episode_finished)
         print('Dealer:')
         print("dealer's cards:", env.dealer_cards)
         print("dealer's sum:", env.dealer_sum)
@@ -18,6 +20,7 @@ class Env:
         print("player's cards:", env.player_cards)
         print("player's sum:", env.player_sum)
         print("player has useable ace:", self.player_has_usable_ace)
+        print('~' * 30)
 
     def draw_card(self):
         """ Draw a card from the deck.
@@ -46,17 +49,32 @@ class Env:
                 value -= 10
             else:
                 self.dealer_has_usable_ace = True
-        self.dealer_sum += value
 
-    def init_episode(self):
-        self.dealer_cards = []
-        self.dealer_sum = 0
-        self.dealer_has_usable_ace = False
-        self.dealer_showing = 0
+        if self.dealer_sum + value > 21 and self.dealer_has_usable_ace:
+            self.dealer_sum -= 10    # Use the ace as 1 instead of 11
+            self.dealer_sum += value
+            self.dealer_has_usable_ace = False
+        else:
+            self.dealer_sum += value
 
-        self.player_cards = []
-        self.player_sum = 0
-        self.player_has_usable_ace = False
+    def player_add_card(self, card, value):
+        """ Add a new card to the player's hand and compute the new sum. """
+        self.player_cards.append(card)
+        # in case that the card is an ace check some conditions
+        if value == 11:
+            if self.player_has_usable_ace:
+                value -= 10
+            elif self.player_sum + value > 21:
+                value -= 10
+            else:
+                self.player_has_usable_ace = True
+
+        if self.player_sum + value > 21 and self.player_has_usable_ace:
+            self.player_sum -= 10    # Use the ace as 1 instead of 11
+            self.player_sum += value
+            self.player_has_usable_ace = False
+        else:
+            self.player_sum += value
 
     def deal_cards(self):
         """ Deal the first couple of cards:
@@ -73,6 +91,66 @@ class Env:
                 else:
                     self.dealer_showing = card
 
+        # draw player's cards
+        while self.player_sum < 12:
+            (card,value) = self.draw_card()
+            self.player_add_card(card, value)
+
+    def init_episode(self):
+        self.dealer_cards = []
+        self.dealer_sum = 0
+        self.dealer_has_usable_ace = False
+        self.dealer_showing = 0
+
+        self.player_cards = []
+        self.player_sum = 0
+        self.player_has_usable_ace = False
+
+        self.episode_finished = False
+
+        self.deal_cards()
+
+    def dealer_turn(self):
+        """ The dealer's turn.
+            Dealer draws until it's sum >= 17 """
+        while self.dealer_sum < 17:
+            (card,value) = self.draw_card()
+            self.dealer_add_card(card, value)
+
+    def get_state(self):
+        """ Get the environment state, as experienced from the player. """
+        return (self.player_sum, self.dealer_showing, self.player_has_usable_ace)
+
+    def player_action(self, action):
+        """ Handle player's action.
+            The player can choose to hit or stick. The environment
+            makes the appropriate state transition and returns the
+            reward.
+        """
+        if action == "hit":
+            (card, value) = self.draw_card()
+            self.player_add_card(card, value)
+            if self.player_sum > 21:
+                # player busted
+                reward = -1
+                self.episode_finished = True
+            else:
+                reward = 0
+            
+        if action == "stick":
+            self.dealer_turn()
+            if self.player_sum > self.dealer_sum:
+                reward = 1
+            elif self.player_sum < self.dealer_sum:
+                reward = -1
+            else:
+                reward = 0
+            self.episode_finished = True
+
+        return reward
+
+        
+
 
 
 
@@ -83,5 +161,11 @@ if __name__ == '__main__':
     env = Env()
     # testing dealer_add_card(...)
     env.init_episode()
-    env.deal_cards()
     env.print_params()
+    
+    env.print_params()
+    while not env.episode_finished:
+        action = input("Enter input: ")
+        reward = env.player_action(action)
+        env.print_params()
+        print ("Reward:", reward)
