@@ -1,17 +1,23 @@
 import numpy as np
 
 class Env:
-    deck = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K']
+    deck = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 
     def __init__(self):
-        self.dealer_cards = []
-        self.dealer_sum = 0
-        self.dealer_has_usable_ace = False
-        self.dealer_showing = 0
+        self.init_episode()
 
-        self.player_cards = []
-        self.player_sum = 0
-        self.player_has_usable_ace = False
+    def print_params(self):
+        """ Print all the environment's parameters. """
+        print('Dealer:')
+        print("dealer's cards:", env.dealer_cards)
+        print("dealer's sum:", env.dealer_sum)
+        print("dealer has useable ace:", self.dealer_has_usable_ace)
+        print("dealer's face-up card:", self.dealer_showing)
+        print('~' * 30)
+        print('Player:')
+        print("player's cards:", env.player_cards)
+        print("player's sum:", env.player_sum)
+        print("player has useable ace:", self.player_has_usable_ace)
 
     def draw_card(self):
         """ Draw a card from the deck.
@@ -43,23 +49,29 @@ class Env:
         self.dealer_sum += value
 
     def init_episode(self):
-        """ Initialize an episode:
-                1. Dealer and player draw 2 cards
-                2. Dealer's first card is known to the player"""
         self.dealer_cards = []
         self.dealer_sum = 0
         self.dealer_has_usable_ace = False
+        self.dealer_showing = 0
 
         self.player_cards = []
         self.player_sum = 0
         self.player_has_usable_ace = False
 
+    def deal_cards(self):
+        """ Deal the first couple of cards:
+                1. Dealer and player draw 2 cards
+                2. Dealer's first card is known to the player"""
         # draw dealer's cards
         for i in range(2):
             (card,value) = self.draw_card()
+            self.dealer_add_card(card, value)
+            # expose the faceup card of the dealer
             if i == 0:
-                self.dealer_showing = value
-                self.dealer_add_card(card, value)
+                if card in ['10','J','Q','K']:
+                    self.dealer_showing = '10'    # using '10' for all the above cards to reduce the state space
+                else:
+                    self.dealer_showing = card
 
 
 
@@ -70,9 +82,6 @@ if __name__ == '__main__':
 
     env = Env()
     # testing dealer_add_card(...)
-    env.dealer_add_card('8',8)
-    env.dealer_add_card('A',11)
-    env.dealer_add_card('A',11)
-    env.dealer_add_card('A',11)
-    env.dealer_add_card('A',11)
-    print("dealer's sum: "+str(env.dealer_sum))
+    env.init_episode()
+    env.deal_cards()
+    env.print_params()
