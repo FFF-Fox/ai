@@ -139,12 +139,16 @@ class Env:
             
         if action == "stick":
             self.dealer_turn()
-            if self.player_sum > self.dealer_sum:
+            if self.dealer_sum > 21:
+                # dealer busted
                 reward = 1
-            elif self.player_sum < self.dealer_sum:
-                reward = -1
             else:
-                reward = 0
+                if self.player_sum > self.dealer_sum:
+                    reward = 1
+                elif self.player_sum < self.dealer_sum:
+                    reward = -1
+                else:
+                    reward = 0
             self.episode_finished = True
 
         return reward
