@@ -75,7 +75,7 @@ class Env(object):
 
     def get_state(self):
         """ Get the environment state, as experienced from the player. """
-        return (self.dealer_showing, self.player.points, self.player.has_usable_ace)
+        return self.dealer_showing + ' ' + str(self.player.points) + ' ' + str(self.player.has_usable_ace)
 
     def player_action(self, action):
         """ Handle player's action.
