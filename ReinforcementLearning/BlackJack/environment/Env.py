@@ -1,6 +1,6 @@
 import numpy as np
 
-from Player import Player
+from environment.Player import Player
 
 class Env(object):
     deck = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']

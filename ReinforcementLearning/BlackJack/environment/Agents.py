@@ -20,13 +20,13 @@ class First_Visit_MC(object):
         self.policy[-40:] = ['stick' for i in range(40)]
 
         self.V = np.zeros(self.K)
-        self.returns = [[] for s in range(self.K)]
+        self.Returns = [[] for s in range(self.K)]
 
     def train(self, env, total_episodes):
         """ Estimate the value of the states that the agent experiences. 
             1. Generate episode using the policy
             2. For each state appeared in the episode keep the return following the first
-               occurence and average the returns of each state visited in this episode. """
+               occurence and average the Returns of each state visited in this episode. """
         for episode in range(total_episodes):
             episode_states = []    # the states that will be visited in the current episode
             episode_rewards = []    # the rewards of the episode
@@ -34,7 +34,6 @@ class First_Visit_MC(object):
             env.init_episode()
             while not env.episode_finished:
                 s = env.get_state()
-                # print(self.States.index(s))
                 state = self.States.index(s)
                 action = self.policy[state]
                 reward = env.player_action(action)
@@ -44,9 +43,9 @@ class First_Visit_MC(object):
             for s in set(episode_states):
                 k = episode_states.index(s)    # find the first visit of state s
                 m = len(episode_states) - k
-                R = sum(episode_rewards[-m:])
-                self.returns[s].append(R)
-                self.V[s] = np.mean(self.returns[s])
+                R = sum(episode_rewards[-m:])  # calculate the total return starting from first visit of s
+                self.Returns[s].append(R)
+                self.V[s] = np.mean(self.Returns[s])
                 
 
 
