@@ -16,6 +16,7 @@ class First_Visit_MC(object):
     K = len(States)
 
     def __init__(self):
+        # The default policy to be evaluated is sticking only on 20 or 21
         self.policy = ['hit' for i in range(self.K)]
         self.policy[-40:] = ['stick' for i in range(40)]
 
@@ -41,9 +42,9 @@ class First_Visit_MC(object):
                 episode_states.append(state)
 
             for s in set(episode_states):
-                k = episode_states.index(s)    # find the first visit of state s
-                m = len(episode_states) - k
-                R = sum(episode_rewards[-m:])  # calculate the total return starting from first visit of s
+                i = episode_states.index(s)    # index of the first visit of state s
+                m = len(episode_states) - i
+                R = sum(episode_rewards[-m:])  # total return starting from first visit of s
                 self.Returns[s].append(R)
                 self.V[s] = np.mean(self.Returns[s])
                 
