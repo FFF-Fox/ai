@@ -22,6 +22,7 @@ class First_Visit_MC(object):
 
         self.V = np.zeros(self.K)
 
+    
 if __name__=="__main__":
     # fvmc = First_Visit_MC()
     S = First_Visit_MC()
