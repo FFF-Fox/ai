@@ -4,7 +4,7 @@ class First_Visit_MC(object):
     States = []
     for s in range(12, 22):
         for d in range(1, 11):
-            for a in [False, True]:
+            for a in range(2):
                 state = ''
                 if d == 1:
                     state += 'A'
@@ -27,8 +27,7 @@ class First_Visit_MC(object):
         """ Update the V(s) values after an episode finishes """
         for s in set(episode_states):
                 i = episode_states.index(s)    # index of the first visit of state s
-                m = len(episode_states) - i
-                R = sum(episode_rewards[-m:])  # total return starting from first visit of s
+                R = sum(episode_rewards[i:])  # total return starting from first visit of s
                 self.Returns[s].append(R)
                 self.V[s] = np.mean(self.Returns[s])
 
