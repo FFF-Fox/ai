@@ -4,7 +4,7 @@ from environment.Agents import First_Visit_MC
 env = Env()
 agent = First_Visit_MC()
 
-total_episodes = 10**4
+total_episodes = 10**5
 filename = 'fvmc.dat'
 
 agent.train(env, total_episodes)
@@ -15,4 +15,4 @@ for i in range(200):
 
 with open(filename, 'w') as f:
     for i in range(200):
-        f.write(First_Visit_MC.States[i] + ' ' + str(agent.V[i]) + '\n')
+        f.write(First_Visit_MC.States[i] + ',' + str(agent.V[i]) + '\n')
