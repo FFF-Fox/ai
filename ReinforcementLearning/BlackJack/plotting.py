@@ -60,9 +60,9 @@ ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
 # Customize the x axis.
 # TODO: change the x and y ticks
-# ax.set_xticks(d)
+ax.set_xticklabels(d[::2])
+ax.set_yticklabels(s[::2])
 
-# ax.set_yticks(s)
 
 # Add a color bar which maps values to colors.
 fig.colorbar(surf, shrink=0.5, aspect=5)
