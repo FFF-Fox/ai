@@ -34,23 +34,42 @@ for has_ace in a:
             state = d[i] + ' ' + s[j] + ' ' + has_ace
             Z[has_ace][i,j] = V[state]
 
-fig = plt.figure()
-ax = fig.gca(projection='3d')
+fig = plt.figure(figsize=plt.figaspect(0.5))
+ax = fig.add_subplot(1, 2, 1, projection='3d')
 
 # Plot the surface.
-surf = ax.plot_surface(X, Y, Z['0'], cmap=cm.coolwarm,
+surf = ax.plot_surface(X, Y, Z['0'], rstride=1, cstride=1, cmap=cm.coolwarm,
                        linewidth=0, antialiased=False)
 
 # Customize the z axis.
-ax.set_zlim(-1.01, 1.01)
+ax.set_zlim(-1.0, 1.0)
 ax.zaxis.set_major_locator(LinearLocator(10))
 ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
 # Customize the x,y axis.
+ax.set_title('No usable ace')
 ax.set_xticklabels(s[::2])
 ax.set_yticklabels(d[::2])
 
 # Add a color bar which maps values to colors.
-fig.colorbar(surf, shrink=0.5, aspect=5)
+# fig.colorbar(surf, shrink=0.5, aspect=10)
+
+# Second plot
+ax = fig.add_subplot(1, 2, 2, projection='3d')
+ax.plot_surface(X, Y, Z['1'], rstride=1, cstride=1, cmap=cm.coolwarm,
+                       linewidth=0, antialiased=False)
+
+# Customize the z axis.
+ax.set_zlim(-1.0, 1.0)
+ax.zaxis.set_major_locator(LinearLocator(10))
+ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+
+# Customize the x,y axis.
+ax.set_title('Usable ace')
+ax.set_xticklabels(s[::2])
+ax.set_yticklabels(d[::2])
+
+# Add a color bar which maps values to colors.
+# fig.colorbar(surf, shrink=0.5, aspect=10)
 
 plt.show()

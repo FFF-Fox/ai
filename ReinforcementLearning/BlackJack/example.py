@@ -4,7 +4,7 @@ from environment.Agents import First_Visit_MC
 env = Env()
 agent = First_Visit_MC()
 
-total_episodes = 10**5
+total_episodes = 5 * 10**5
 filename = 'fvmc.dat'
 
 agent.train(env, total_episodes)
