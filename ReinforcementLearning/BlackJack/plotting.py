@@ -5,9 +5,6 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 
 
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-
 d = ['A'] + [str(x) for x in range(2,11)]
 D = len(d)
 s = [str(x) for x in range(12,22)]
@@ -36,6 +33,9 @@ for has_ace in a:
         for j in range(S):
             state = d[i] + ' ' + s[j] + ' ' + has_ace
             Z[has_ace][i,j] = V[state]
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
 
 # Plot the surface.
 surf = ax.plot_surface(X, Y, Z['0'], cmap=cm.coolwarm,
