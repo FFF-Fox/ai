@@ -12,20 +12,31 @@ parser.add_argument('-f', '--filename', help='save the state, value pairs in a f
 
 args = parser.parse_args()
 
+# Initialize the environment and the agent.
 env = Env()
 agent = First_Visit_MC()
+
+# Specify the total number of episodes.
 if args.episodes:
     total_episodes = args.episodes
 else:
     total_episodes = 10**4
+
+# The agent estimates the state value function.
 agent.train(env, total_episodes)
 
+# Print V(s) to the console.
 if args.print_values:
     print("state description: dealer's face-up card, player's points, player has a useable ace")
     for i in range(200):
         print('V('+ First_Visit_MC.States[i] + '): ', agent.V[i])
 
+# Write the results in a file. The results are written in the form
+# of state, value pairs.
 if args.filename:
-    with open(args.filename, 'w') as f:
-        for i in range(200):
-            f.write(First_Visit_MC.States[i] + ',' + str(agent.V[i]) + '\n')
+    filename = args.filename
+else:
+    filename = 'results.dat'
+with open(filename, 'w') as f:
+    for i in range(200):
+        f.write(First_Visit_MC.States[i] + ',' + str(agent.V[i]) + '\n')
