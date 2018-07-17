@@ -1,7 +1,7 @@
 import argparse
 
 from environment.Env import Env
-from environment.Agents import FVMC
+from Agents import FVMC
 
 # Argument handling.
 parser = argparse.ArgumentParser()
