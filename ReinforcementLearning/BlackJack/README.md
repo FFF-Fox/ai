@@ -10,20 +10,20 @@ Using a monte carlo approach, the agent estimates the state value function V(s) 
 
 The state information of the environment consists of the dealer's face up card, the player's sum and whether the player has an ace that can be used as 1 instead of 11.
 
-| ![fvmc blackjack plots](fvmc_500000.png) |
+| ![FVMC blackjack plots](fvmc_500000.png) |
 |:--:|
 | *Estimation of the state value V(s) using the first visit Monte Carlo method. The agent was trained by playing 500.000 games.* |
 
-The example.py script can be used to generate new estimations and the plotting.py script can be used to plot the results as shown below:
+The example_fvmc.py script can be used to generate new estimations and the plotting.py script can be used to plot the results as shown below:
 ```console
-python example.py --episodes 10000
+python example_fvmc.py --episodes 10000
 python plotting.py
 ```
 
 ## TD(0) Policy Evaluation
 In this experiment the agent estimates the state value function of the game using the TD(0) algorithm. The strategies of the dealer and the agent remain the same.
 
-| ![fvmc blackjack plots](td0_10^7.png) |
+| ![TD(0) blackjack plots](td0_10^7.png) |
 |:--:|
 | *Estimation of the state value V(s) using the TD(0) method. The agent was trained by playing 10.000.000 games.* |
 
