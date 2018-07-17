@@ -1,6 +1,5 @@
 # Evaluating a blackjack player's policy
 
-
 ## First Visit Monte Carlo Policy Evaluation
 This experiment is presented as an example in the book Reinforcement Learning an Introduction by Richard S. Sutton and Andrew G. Barto.
 
@@ -13,10 +12,23 @@ The state information of the environment consists of the dealer's face up card, 
 
 | ![fvmc blackjack plots](fvmc_500000.png) |
 |:--:|
-| *Estimation of the state value V(s) using the first visit Monte Carlo method. The agent was trained by playing 500000 games.* |
+| *Estimation of the state value V(s) using the first visit Monte Carlo method. The agent was trained by playing 500.000 games.* |
 
 The example.py script can be used to generate new estimations and the plotting.py script can be used to plot the results as shown below:
 ```console
 python example.py --episodes 10000
+python plotting.py
+```
+
+## TD(0) Policy Evaluation
+In this experiment the agent estimates the state value function of the game using the TD(0) algorithm. The strategies of the dealer and the agent remain the same.
+
+| ![fvmc blackjack plots](td0_10^7.png) |
+|:--:|
+| *Estimation of the state value V(s) using the TD(0) method. The agent was trained by playing 10.000.000 games.* |
+
+The example_td0.py and plotting.py scripts can be used as shown below:
+```console
+python example.py --episodes 10000 --alpha 0.1 --discount_rate 0.8
 python plotting.py
 ```
