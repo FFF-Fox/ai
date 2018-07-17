@@ -51,14 +51,59 @@ class FVMC(object):
 
             self.update_values(episode_states, episode_rewards)
 
+class TD0(object):
+    States = []
+    for s in range(12, 22):
+        for d in range(1, 11):
+            for a in range(2):
+                state = ''
+                if d == 1:
+                    state += 'A'
+                else:
+                    state += str(d)
+                
+                state += ' ' + str(s) + ' ' + str(a)
+                States.append(state)
+    K = len(States)
+
+    def __init__(self):
+        # The default policy to be evaluated is sticking only on 20 or 21
+        self.policy = ['hit' for i in range(self.K)]
+        self.policy[-40:] = ['stick' for i in range(40)]
+
+        self.V = np.zeros(self.K)
+        self.Returns = [[] for s in range(self.K)]
+
+    def train(self, env, total_episodes, a, discount_rate):
+        """ Estimate the value of the states that the agent experiences. 
+            1. Generate episode using the policy
+            2. For each state visited, take action a acording to policy.
+            3. Observe the reward and the next state.
+            4. Update the value of the state. """
+        for _ in range(total_episodes):
+            env.init_episode()
+            s = env.get_state()
+            state = self.States.index(s)
+            while not env.episode_finished:
+                action = self.policy[state]
+                reward = env.player_action(action)
+                if not env.episode_finished:
+                    next_s = env.get_state()
+                    next_state = self.States.index(next_s)
+                    dV = a * (reward + discount_rate * self.V[next_state] - self.V[state])
+                    self.V[state] += dV
+                    state = next_state
+                else:
+                    dV = a * (reward - self.V[state])
+                    self.V[state] += dV
 
 if __name__ == "__main__":
     from environment.Env import Env
 
     env = Env()
-    agent = FVMC()
+    agent = TD0()
 
-    agent.train(env, 5 * 10**5)
+    agent.train(env, 5 * 10**4, 0.1, 1)
     for i in range(200):
-        print('state: ',FVMC.States[i])
+        print('state: ',TD0.States[i])
         print('V(s): ', agent.V[i])
