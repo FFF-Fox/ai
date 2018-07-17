@@ -14,3 +14,9 @@ The state information of the environment consists of the dealer's face up card, 
 | ![fvmc blackjack plots](fvmc_500000.png) |
 |:--:|
 | *Estimation of the state value V(s) using the first visit Monte Carlo method. The agent's policy is sticking only on 20 or 21.* |
+
+The example.py script can be used to generate new estimations and the plotting.py script can be used to plot the results as shown below:
+```console
+python example.py --episodes 10000
+python plotting.py
+```
