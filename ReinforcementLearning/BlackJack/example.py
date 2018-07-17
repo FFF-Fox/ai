@@ -1,7 +1,7 @@
 import argparse
 
 from environment.Env import Env
-from environment.Agents import First_Visit_MC
+from environment.Agents import FVMC
 
 # Argument handling.
 parser = argparse.ArgumentParser()
@@ -14,7 +14,7 @@ args = parser.parse_args()
 
 # Initialize the environment and the agent.
 env = Env()
-agent = First_Visit_MC()
+agent = FVMC()
 
 # Specify the total number of episodes.
 if args.episodes:
@@ -29,7 +29,7 @@ agent.train(env, total_episodes)
 if args.print_values:
     print("state description: dealer's face-up card, player's points, player has a useable ace")
     for i in range(200):
-        print('V('+ First_Visit_MC.States[i] + '): ', agent.V[i])
+        print('V('+ FVMC.States[i] + '): ', agent.V[i])
 
 # Write the results in a file. The results are written in the form
 # of state, value pairs.
@@ -39,4 +39,4 @@ else:
     filename = 'results.dat'
 with open(filename, 'w') as f:
     for i in range(200):
-        f.write(First_Visit_MC.States[i] + ',' + str(agent.V[i]) + '\n')
+        f.write(FVMC.States[i] + ',' + str(agent.V[i]) + '\n')

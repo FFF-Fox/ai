@@ -1,6 +1,6 @@
 import numpy as np
 
-class First_Visit_MC(object):
+class FVMC(object):
     States = []
     for s in range(12, 22):
         for d in range(1, 11):
@@ -56,9 +56,9 @@ if __name__ == "__main__":
     from environment.Env import Env
 
     env = Env()
-    agent = First_Visit_MC()
+    agent = FVMC()
 
     agent.train(env, 5 * 10**5)
     for i in range(200):
-        print('state: ',First_Visit_MC.States[i])
+        print('state: ',FVMC.States[i])
         print('V(s): ', agent.V[i])
