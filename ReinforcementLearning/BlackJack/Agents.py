@@ -1,27 +1,15 @@
 import numpy as np
 
 class FVMC(object):
-    States = []
-    for s in range(12, 22):
-        for d in range(1, 11):
-            for a in range(2):
-                state = ''
-                if d == 1:
-                    state += 'A'
-                else:
-                    state += str(d)
-                
-                state += ' ' + str(s) + ' ' + str(a)
-                States.append(state)
-    K = len(States)
 
     def __init__(self):
         # The default policy to be evaluated is sticking only on 20 or 21
-        self.policy = ['hit' for i in range(self.K)]
+        K = 200
+        self.policy = ['hit' for i in range(K)]
         self.policy[-40:] = ['stick' for i in range(40)]
 
-        self.V = np.zeros(self.K)
-        self.Returns = [[] for s in range(self.K)]
+        self.V = np.zeros(K)
+        self.Returns = [[] for s in range(K)]
 
     def update_values(self, episode_states, episode_rewards):
         """ Update the V(s) values after an episode finishes """
@@ -42,8 +30,7 @@ class FVMC(object):
 
             env.init_episode()
             while not env.episode_finished:
-                s = env.current_state()
-                state = self.States.index(s)
+                state = env.current_state_id()
                 action = self.policy[state]
                 reward = env.player_action(action)
                 episode_rewards.append(reward)

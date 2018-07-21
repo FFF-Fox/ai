@@ -4,6 +4,7 @@ from environment.Player import Player
 
 class Env(object):
     deck = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+    total_states = 200
 
     def __init__(self):
         self.player = Player()
