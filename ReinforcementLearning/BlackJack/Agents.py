@@ -42,7 +42,7 @@ class FVMC(object):
 
             env.init_episode()
             while not env.episode_finished:
-                s = env.get_state()
+                s = env.current_state()
                 state = self.States.index(s)
                 action = self.policy[state]
                 reward = env.player_action(action)
@@ -82,13 +82,13 @@ class TD0(object):
             4. Update the value of the state. """
         for _ in range(total_episodes):
             env.init_episode()
-            s = env.get_state()
+            s = env.current_state()
             state = self.States.index(s)
             while not env.episode_finished:
                 action = self.policy[state]
                 reward = env.player_action(action)
                 if not env.episode_finished:
-                    next_s = env.get_state()
+                    next_s = env.current_state()
                     next_state = self.States.index(next_s)
                     dV = a * (reward + discount_rate * self.V[next_state] - self.V[state])
                     self.V[state] += dV
@@ -100,10 +100,42 @@ class TD0(object):
 if __name__ == "__main__":
     from environment.Env import Env
 
+    def state_id(d, s, a):
+        return (s - 12) * 20 + (d - 1) * 2 + a
+
+    def state(id):
+        s = id // 20 + 12
+        id %= 20
+        d = id // 2 + 1
+        a = id % 2
+
+        if d == 1:
+            d = 'A'
+        else:
+            d = str(d)
+        
+        s = str(s)
+        a = str(a)
+
+        return d + ' ' + s + ' ' + a
+
     env = Env()
     agent = TD0()
+    
+    for (i, st) in enumerate(agent.States):
+        [d, s, a] = st.split()
+        if d == 'A':
+            d = 1
+        else:
+            d = int(d)
+        s = int(s)
+        a = int(a)
+        # print('i =', i)
+        # print('state_id =', state(d,s,a))
+        if i != state_id(d,s,a):
+            print(False)
 
-    agent.train(env, 5 * 10**4, 0.1, 1)
-    for i in range(200):
-        print('state: ',TD0.States[i])
-        print('V(s): ', agent.V[i])
+        # print ('s =', st, 'state =', state(i))
+        if st != state(i):
+            print(False)
+    

@@ -73,9 +73,24 @@ class Env(object):
             (card,value) = self.draw_card()
             self.dealer.add_card(card, value)
 
-    def get_state(self):
-        """ Get the environment state, as experienced from the player. """
+    def state_id(self, d, s, a):
+        """ Return the id of a state given the state's parameters in integers. """
+        return (s - 12) * 20 + (d - 1) * 2 + a
+
+    def current_state(self):
+        """ Get the environment's state information as a string. """
         return self.dealer_showing + ' ' + str(self.player.points) + ' ' + str(int(self.player.has_usable_ace))
+
+    def current_state_id(self):
+        """ Return the id of the current state. """
+        if self.dealer_showing == 'A':
+            d = 1
+        else:
+            d = int(self.dealer_showing)
+        s = int(self.player.points)
+        a = int(self.player.has_usable_ace)
+
+        return self.state_id(d, s, a)
 
     def player_action(self, action):
         """ Handle player's action.
