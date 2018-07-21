@@ -10,6 +10,15 @@ class Env(object):
         self.dealer = Player()
         self.init_episode()
 
+    def init_episode(self):
+        self.episode_finished = False
+
+        self.dealer.empty_hand()
+        self.player.empty_hand()
+        
+        self.dealer_showing = 0
+        self.deal_cards()
+
     def print_params(self):
         """ Print all the environment's parameters. """
         print('~' * 30)
@@ -56,15 +65,6 @@ class Env(object):
         while self.player.points < 12:
             (card,value) = self.draw_card()
             self.player.add_card(card, value)
-
-    def init_episode(self):
-        self.episode_finished = False
-
-        self.dealer.empty_hand()
-        self.player.empty_hand()
-        
-        self.dealer_showing = 0
-        self.deal_cards()
 
     def dealer_turn(self):
         """ The dealer's turn.
