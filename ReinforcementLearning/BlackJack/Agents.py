@@ -55,11 +55,11 @@ class TD0(object):
 
     def __init__(self):
         # The default policy to be evaluated is sticking only on 20 or 21
-        self.policy = ['hit' for i in range(self.K)]
+        K = 200
+        self.policy = ['hit' for i in range(K)]
         self.policy[-40:] = ['stick' for i in range(40)]
 
-        self.V = np.zeros(self.K)
-        self.Returns = [[] for s in range(self.K)]
+        self.V = np.zeros(K)
 
     def train(self, env, total_episodes, a, discount_rate):
         """ Estimate the value of the states that the agent experiences. 
@@ -69,14 +69,12 @@ class TD0(object):
             4. Update the value of the state. """
         for _ in range(total_episodes):
             env.init_episode()
-            s = env.current_state()
-            state = self.States.index(s)
+            state = env.current_state_id()
             while not env.episode_finished:
                 action = self.policy[state]
                 reward = env.player_action(action)
                 if not env.episode_finished:
-                    next_s = env.current_state()
-                    next_state = self.States.index(next_s)
+                    next_state = env.current_state_id()
                     dV = a * (reward + discount_rate * self.V[next_state] - self.V[state])
                     self.V[state] += dV
                     state = next_state
