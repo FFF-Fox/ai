@@ -73,6 +73,23 @@ class Env(object):
             (card,value) = self.draw_card()
             self.dealer.add_card(card, value)
 
+    def state_string(self, id):
+        """ Get a description of the state in a string from it's id. """
+        s = id // 20 + 12
+        id %= 20
+        d = id // 2 + 1
+        a = id % 2
+
+        if d == 1:
+            d = 'A'
+        else:
+            d = str(d)
+        
+        s = str(s)
+        a = str(a)
+
+        return d + ' ' + s + ' ' + a
+
     def state_id(self, d, s, a):
         """ Return the id of a state given the state's parameters in integers. """
         return (s - 12) * 20 + (d - 1) * 2 + a

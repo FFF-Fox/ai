@@ -103,7 +103,7 @@ if __name__ == "__main__":
     def state_id(d, s, a):
         return (s - 12) * 20 + (d - 1) * 2 + a
 
-    def state(id):
+    def state_string(id):
         s = id // 20 + 12
         id %= 20
         d = id // 2 + 1
