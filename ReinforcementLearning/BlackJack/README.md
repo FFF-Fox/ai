@@ -25,10 +25,26 @@ In this experiment the agent estimates the state value function of the game usin
 
 | ![TD(0) blackjack plots](td0_10^7.png) |
 |:--:|
-| *Estimation of the state value V(s) using the TD(0) method. The agent was trained by playing 10.000.000 games.* |
+| *Estimation of the state value V(s) using the TD(λ) method. The agent was trained by playing 10.000.000 games.* |
 
 The example_td0.py and plotting.py scripts can be used as shown below:
 ```console
 python example.py --episodes 10000 --alpha 0.1 --discount_rate 0.8
+python plotting.py
+```
+
+## TD(λ) Policy Evaluation
+Here the TD(λ) algorithm is used to evaluate the state value function.
+Parameters used are:
+* lamda = 0.6
+* a = 0.01
+
+| ![TD(λ) blackjack plots](td_lamda.png) |
+|:--:|
+| *Estimation of the state value V(s) using the TD(λ) method. The agent was trained by playing 100.000 games.* |
+
+The example_td_lamda.py and plotting.py scripts can be used as shown below:
+```console
+python example.py --episodes 10000 --lamda 0.6 --alpha 0.01
 python plotting.py
 ```

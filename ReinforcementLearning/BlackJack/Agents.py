@@ -88,6 +88,7 @@ class TD_lamda(object):
             3. Observe the reward and the next state.
             4. Update the value of all states experienced in the episode. """
         for _ in range(total_episodes):
+            self.e = np.zeros(self.e.size)
             env.init_episode()
             state = env.current_state_id()
             while not env.episode_finished:
