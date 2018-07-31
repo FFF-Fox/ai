@@ -78,7 +78,7 @@ class TD_lamda(object):
         self.policy[-40:] = ['stick' for i in range(40)]
 
         self.V = np.zeros(K)
-        # Accumulating traces
+        # Replacing traces
         self.e = np.zeros(K)
 
     def train(self, env, total_episodes, lamda, a, discount_rate):
@@ -93,7 +93,7 @@ class TD_lamda(object):
             while not env.episode_finished:
                 action = self.policy[state]
                 reward = env.player_action(action)
-                self.e[state] += 1
+                self.e[state] = 1
                 if not env.episode_finished:
                     next_state = env.current_state_id()
                     dV = reward + discount_rate * self.V[next_state] - self.V[state]
@@ -101,6 +101,7 @@ class TD_lamda(object):
                 else:
                     dV = reward - self.V[state]
                 self.V += a * dV * self.e
+                self.e *= discount_rate * lamda
 
 
 if __name__ == "__main__":
