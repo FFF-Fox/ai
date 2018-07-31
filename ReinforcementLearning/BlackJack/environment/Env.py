@@ -96,8 +96,15 @@ class Env(object):
         return (s - 12) * 20 + (d - 1) * 2 + a
 
     def current_state(self):
-        """ Get the environment's state information as a string. """
-        return self.dealer_showing + ' ' + str(self.player.points) + ' ' + str(int(self.player.has_usable_ace))
+        """ Get the environment's state information as a numpy array. """
+        if self.dealer_showing == 'A':
+            d = 1
+        else:
+            d = int(self.dealer_showing)
+        s = int(self.player.points)
+        a = int(self.player.has_usable_ace)
+
+        return np.array([d, s, a])
 
     def current_state_id(self):
         """ Return the id of the current state. """
@@ -154,3 +161,4 @@ if __name__ == '__main__':
         reward = env.player_action(action)
         env.print_params()
         print ("Reward:", reward)
+        print('State:', env.current_state())

@@ -107,20 +107,6 @@ if __name__ == "__main__":
     env = Env()
     agent = TD0()
     
-    for (i, st) in enumerate(agent.States):
-        [d, s, a] = st.split()
-        if d == 'A':
-            d = 1
-        else:
-            d = int(d)
-        s = int(s)
-        a = int(a)
-        # print('i =', i)
-        # print('state_id =', state(d,s,a))
-        if i != state_id(d,s,a):
-            print(False)
+    V = np.zeros()
 
-        # print ('s =', st, 'state =', state(i))
-        if st != state(i):
-            print(False)
     
