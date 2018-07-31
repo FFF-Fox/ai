@@ -41,7 +41,7 @@ agent.train(env, total_episodes, alpha, discount_rate)
 if args.print_values:
     print("state description: dealer's face-up card, player's points, player has a useable ace")
     for i in range(200):
-        print('V('+ TD0.States[i] + '): ', agent.V[i])
+        print('V('+ env.state_string(i) + '): ', agent.V[i])
 
 # Write the results in a file. The results are written in the form
 # of state, value pairs.
@@ -51,4 +51,4 @@ else:
     filename = 'results.dat'
 with open(filename, 'w') as f:
     for i in range(200):
-        f.write(TD0.States[i] + ',' + str(agent.V[i]) + '\n')
+        f.write(env.state_string(i) + ',' + str(agent.V[i]) + '\n')

@@ -39,19 +39,6 @@ class FVMC(object):
             self.update_values(episode_states, episode_rewards)
 
 class TD0(object):
-    States = []
-    for s in range(12, 22):
-        for d in range(1, 11):
-            for a in range(2):
-                state = ''
-                if d == 1:
-                    state += 'A'
-                else:
-                    state += str(d)
-                
-                state += ' ' + str(s) + ' ' + str(a)
-                States.append(state)
-    K = len(States)
 
     def __init__(self):
         # The default policy to be evaluated is sticking only on 20 or 21
@@ -64,7 +51,7 @@ class TD0(object):
     def train(self, env, total_episodes, a, discount_rate):
         """ Estimate the value of the states that the agent experiences. 
             1. Generate episode using the policy
-            2. For each state visited, take action a acording to policy.
+            2. For each state visited, take action acording to policy.
             3. Observe the reward and the next state.
             4. Update the value of the state. """
         for _ in range(total_episodes):
@@ -81,6 +68,40 @@ class TD0(object):
                 else:
                     dV = a * (reward - self.V[state])
                     self.V[state] += dV
+
+class TD_lamda(object):
+
+    def __init__(self):
+        # The default policy to be evaluated is sticking only on 20 or 21
+        K = 200
+        self.policy = ['hit' for i in range(K)]
+        self.policy[-40:] = ['stick' for i in range(40)]
+
+        self.V = np.zeros(K)
+        # Accumulating traces
+        self.e = np.zeros(K)
+
+    def train(self, env, total_episodes, lamda, a, discount_rate):
+        """ Estimate the value of the states that the agent experiences. 
+            1. Generate episode using the policy
+            2. For each state visited, take action acording to policy.
+            3. Observe the reward and the next state.
+            4. Update the value of all states experienced in the episode. """
+        for _ in range(total_episodes):
+            env.init_episode()
+            state = env.current_state_id()
+            while not env.episode_finished:
+                action = self.policy[state]
+                reward = env.player_action(action)
+                self.e[state] += 1
+                if not env.episode_finished:
+                    next_state = env.current_state_id()
+                    dV = reward + discount_rate * self.V[next_state] - self.V[state]
+                    state = next_state
+                else:
+                    dV = reward - self.V[state]
+                self.V += a * dV * self.e
+
 
 if __name__ == "__main__":
     from environment.Env import Env
